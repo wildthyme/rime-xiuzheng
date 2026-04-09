@@ -18,8 +18,8 @@ in a 4-key long code, the most important roots are the first, last, and penultim
 zhengma 3-key shortcuts use the first three roots.
 this is confusing, because second and third codes may not appear in the long code at all.
 xiuzheng 3-key shortcuts instead retain the first, last, and penultimate.
-​| character | full code sequence | four-code | zhengma shortcut | xiuzheng shortcut |
-​| 黨 | KoWwJLkBUo | KoBU | KW(J) | K(B)U |
+| character | full code sequence | four-code | zhengma shortcut | xiuzheng shortcut |
+| 黨 | KoWwJLkBUo | KoBU | KW(J) | K(B)U |
 another benefit to this change is that the combination of first and last codes differentiates characters with less ambiguity than the combination of the first few codes.
 
 * other features
