@@ -1,8 +1,41 @@
 * introduction
-xiuzheng (zhengma revised) is a reimplementation of the zhengma shape-based input method which retains the original system character decomposition and 4-key character codes, but altering the system of briefs for typing the most commonly-used characters and long words.
+xiuzheng (zhengma revised) is a shape-based input method based on [[https://en.wikipedia.org/wiki/Zhengma_method][zhengma]].
+those not already familiar with zhengma would do well to look first at the guides linked at the bottom of this page.
+those not familiar with rime will need to look up a guide to install it and add a new schema.
+
+xiuzheng's design goals are as follows:
+- xiuzheng should be fast for a skilled typist.
+  - like zhengma, it uses a maximum of 4 keys/char, *fewer keystrokes than its better-known rival [[https://en.wikipedia.org/wiki/Cangjie_input_method][cangjie]]* @ 5 keys/char.
+  - because of its many briefs for common phrases, it requires *fewer keystrokes than the best pinyin IME* (viz. [[https://github.com/Reniastyc/rime-double-terra][double pinyin with tones]] @ 3 keys/char).
+  - it aims to *match the english average rate* of [[https://norvig.com/mayzner.html][4.79 letters/word]], although this has not yet been measured.
+- xiuzheng should be low-ambiguity and suitable for blind typing through muscle memory without producing errors.
+  - phonetic input methods (pinyin/zhuyin) depend on a feedback loop in which the user stops typing to look at a list of word matches and choose the one they intend.
+    this is often acceptable to people who don't know any better, as long as they can type full phrases and rely on the software to predict what word they want based on context.
+    however, it is much slower and more error-prone than touch-typing a language like english in phonetic script, where the user can build muscle memory and trust that /what you type is what you get/.
+  - like zhengma and cangjie, *xiuzheng makes all commonly-used single characters touch-typable*, because you type the character /shape/, not the /sound/.
+  - unlike zhengma and cangjie, *xiuzheng also makes commonly-used words and phrases touch-typable*, by assigning them low-ambiguity shortcuts.
+- xiuzheng should be intuitive.
+  - like in zhengma and unlike cangjie, *the method to type a character is predictable based on the stroke order for writing it*.
+  - xiuzheng should be *familiar and easy to adjust to for existing users of zhengma*, because it retains the same 4-key character codes and makes shortcuts /more/ predictable.
+- xiuzheng should support multiple regions and languages.
+  - like zhengma and cangjie, the low ambiguity of xiuzheng is suited to typing classical chinese.
+  - unlike zhengma, xiuzheng provides a word-dictionary based on traditional characters, so that you don't have to choose from a suggestion list to avoid typing the simplified version of a word.
+  - in the hope of enabling some of the same stylistic freedom available in handwriting, some common variant characters are supported: 臺／台、對／対、個／亇、第／㐧、聽／咡、點／奌，etc.
+  - i intend next to release a separate word-dictionary based on simplified characters.
+  - in future, i would like to produce dictionaries for east asian languages besides mandarin, but i am not as familiar with those and will need to go about it carefully.
+
+this is a new project, and i am very open to comments or suggestions for refining the system.
+
+* comparison with zhengma
+xiuzheng retains zhengma's original system of character decomposition and 4-key character codes, but alters the system of briefs for typing the most commonly-used characters and long words.
 the original version of zhengma assigns long words to 4-key codes, resulting in many collisions between different dictionary entries.
 by my calculations, if you were to type the dictionary with your eyes closed using zhengma, unable to choose the correct list from the suggestion dropdown, you would get at least 44% of words wrong.
 by using longer codes for longer words, xiuzheng reduces this error rate to ~6%.
+to compensate for the use of longer codes, many common words are also assigned shortcuts: =unt= 為什麼、 =ae= 一直、 =jc= 嗎，etc.
+
+here CamelCase is used to indicate different roots.
+thus the root 女 is written =Zm=, the root 生 is written =Mc=, and the sequence of roots for 姓 is =ZmMc=.
+in practice, everything is typed in lowercase.
 
 examples:
 | phrase | zhengma code | xiuzheng code |
@@ -10,8 +43,8 @@ examples:
 | 女生   | ZmMc         | ZmMcV         |
 | 報導   | BUWU         | BW, BYXWUN    |
 | 報道   | BUWU         | BYXWND        |
-| 騙子   | CWYA         | CWLYa         |
-| 駝子   | CWYA         | CWRYa         |
+| 騙子   | CWYa         | CWLYa         |
+| 駝子   | CWYa         | CWRYa         |
 
 xiuzheng also makes the process for deriving 3-key shortcuts more intuitive, by making them more similar to 4-key long codes.
 in a 4-key long code, the most important roots are the first, last, and penultimate.
@@ -19,23 +52,8 @@ zhengma 3-key shortcuts use the first three roots.
 this is confusing, because second and third codes may not appear in the long code at all.
 xiuzheng 3-key shortcuts instead retain the first, last, and penultimate.
 | character | full code sequence | four-code | zhengma shortcut | xiuzheng shortcut |
-| 黨 | KoWwJLkBUo | KoBU | KW(J) | K(B)U |
-another benefit to this change is that the combination of first and last codes differentiates characters with less ambiguity than the combination of the first few codes.
-
-* other features
-- traditional characters are first class; 1-key shortcuts are changed to fit TC usage, and SC phrases do not clutter the dictionary.
-- some common variant characters are supported: 臺／台、對／対、個／亇、第／㐧、聽／咡、點／奌，etc.
-- many common words are assigned shortcuts: =unt= 為什麼、 =ae= 一直、 =jc= 嗎，etc.
-
-* todo
-- rewrite this page to first introduce the system to newbs and relegate the detailed comparison with zhengma to a separate section
-- mandarin (tc/sc) versions of this page
-- complete simplified chinese version of dictionary
-- rip wiktionary/kaikki for dictionary
-- include pinyin in dictionary input, generate reverse lookup file
-- support more obscure variant and vietnamese characters (many had incorrect codes in the old zhengma file and were collectively struck until they can be checked carefully)
-- hokkien/hk-canto/vietnamese/japanese support?
-- version 1.0
+| 黨        | KoWwJLkBUo         | KoBU      | KW(J)            | K(B)U             |
+another benefit to this change is that the combination of first and last codes differentiates characters with less ambiguity than the combination of the first few codes, producing fewer collisions.
 
 * code system
 ** single character
@@ -52,22 +70,49 @@ another benefit to this change is that the combination of first and last codes d
 | Ab(Cd)E(f)Gh  | AbEG      | AEG        | AG              |
 
 ** full word
+note how 2-char codes are usually 3+3, but may also be 2+3 or 2+4, if the code for the first character happens to be particularly short.
+reduplicated words such as 哈哈 also get special treatment.
+instead of J(O)AJ + J(O)AJ = JAJJAJ, the code is JOAJ + V = JOAJV.
+simply type the full code for the original character and add V's until it is 5 keys long.
 
-| ​# of chars | long code                                             | shortcut |
-|          1 | A(B)CD                                                | AD, ACD  |
-|          2 | A(B)CD + E(F)GH = ACDEGH                              | AE       |
-|          3 | A(B)CD + E(F)GH + I(J)KL = ACDEGHIKL                  | AEI      |
-|         4+ | A(BC)D + E(FG)H + I(JK)L + M(NO)P + ... = ADEHILMP... |          |
+| ​# of chars | long code                                             | shortcut  |
+|          1 | A(B)CD                                                | AD or ACD |
+|          2 | A(B)CD + E(F)GH = ACDEGH                              | AE        |
+|          2 | AB + CDEF = ABCDEF                              | AE        |
+|          2 | ABCD + ABCD = ABCDV (same char. twice)                | AV        |
+|          3 | A(B)CD + E(F)GH + I(J)KL = ACDEGHIKL                  | AEI       |
+|         4+ | A(BC)D + E(FG)H + I(JK)L + M(NO)P + ... = ADEHILMP... |           |
 
 ** codes by length
+it may seem odd that 3-char words take 9 keys, while 4-char words only take 8.
+however, 4-char words are rarer and so can afford shorter codes without becoming ambiguous.
+3 chars × 3 keys and 4 chars × 2 keys makes for more intuitive arithmetic than any other option i have experimented with.
 
-| code length | result                             |
-|           1 | 1-char frequently-used word        |
-|           2 | 1-char/2-char frequently-used word |
-|           3 | 1-char/3-char frequently-used word |
-|           4 | single character                   |
-|           5 | 2-char word (2+2+v, 2+3, 3+2)      |
-|           6 | 2-char word (3+3)                  |
-|           8 | 4-char word (2+2+2+2)              |
-|           9 | 3-char word (3+3+3)                |
-|         10+ | 5+-char word (2×5+)                |
+note also
+
+| code length | result                                |
+|           1 | 1-char frequently-used word           |
+|           2 | 1-char or 2-char frequently-used word |
+|           3 | 1-char or 3-char frequently-used word |
+|           4 | single character                      |
+|           5 | 2-char word (2+2+v, 2+3, 3+2)         |
+|           6 | 2-char word (2+4, 3+3)                |
+|           8 | 4-char word (2+2+2+2)                 |
+|           9 | 3-char word (3+3+3)                   |
+|         10+ | 5+-char word (2×5+)                   |
+* zhengma learning resources
+- [[https://pinchoboo.github.io/ZhengmaPractice][Zhengma practice tool]]
+- [[https://upload.wikimedia.org/wikipedia/commons/6/69/ZhengMa_Chart.png][Zhengma roots chart by Trotimus on Wikimedia Commons]]
+- [[https://codmal.narod.ru/ZhengMa.htm][Megatron Cookie, "ZHENGMA (郑码): A Brief Introduction for English Speakers"]] (en)
+- [[https://en.wikibooks.org/wiki/Zhengma_Input][Zhengma Input on Wikibooks]] (en)
+* todo
+- detailed installation instructions
+- mandarin (tc/sc) versions of this page
+- double check reduplicated word codes (熱騰騰 etc)
+- complete simplified chinese version of dictionary
+- rip wiktionary/kaikki for dictionary
+- include pinyin in dictionary input, generate reverse lookup file
+- support more obscure variant and vietnamese characters (many had incorrect codes in the old zhengma file and were collectively struck until they can be checked carefully)
+- hokkien/hk-canto/vietnamese/japanese support?
+- version 1.0
+
