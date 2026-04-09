@@ -1,0 +1,73 @@
+* introduction
+xiuzheng (zhengma revised) is a reimplementation of the zhengma shape-based input method which retains the original system character decomposition and 4-key character codes, but altering the system of briefs for typing the most commonly-used characters and long words.
+the original version of zhengma assigns long words to 4-key codes, resulting in many collisions between different dictionary entries.
+by my calculations, if you were to type the dictionary with your eyes closed using zhengma, unable to choose the correct list from the suggestion dropdown, you would get at least 44% of words wrong.
+by using longer codes for longer words, xiuzheng reduces this error rate to ~6%.
+
+examples:
+| phrase | zhengma code | xiuzheng code |
+| 姓     | ZmMc         | ZmMc          |
+| 女生   | ZmMc         | ZmMcV         |
+| 報導   | BUWU         | BW, BYXWUN    |
+| 報道   | BUWU         | BYXWND        |
+| 騙子   | CWYA         | CWLYa         |
+| 駝子   | CWYA         | CWRYa         |
+
+xiuzheng also makes the process for deriving 3-key shortcuts more intuitive, by making them more similar to 4-key long codes.
+in a 4-key long code, the most important roots are the first, last, and penultimate.
+zhengma 3-key shortcuts use the first three roots.
+this is confusing, because second and third codes may not appear in the long code at all.
+xiuzheng 3-key shortcuts instead retain the first, last, and penultimate.
+​| character | full code sequence | four-code | zhengma shortcut | xiuzheng shortcut |
+​| 黨 | KoWwJLkBUo | KoBU | KW(J) | K(B)U |
+another benefit to this change is that the combination of first and last codes differentiates characters with less ambiguity than the combination of the first few codes.
+
+* other features
+- traditional characters are first class; 1-key shortcuts are changed to fit TC usage, and SC phrases do not clutter the dictionary.
+- some common variant characters are supported: 臺／台、對／対、個／亇、第／㐧、聽／咡、點／奌，etc.
+- many common words are assigned shortcuts: =unt= 為什麼、 =ae= 一直、 =jc= 嗎，etc.
+
+* todo
+- rewrite this page to first introduce the system to newbs and relegate the detailed comparison with zhengma to a separate section
+- mandarin (tc/sc) versions of this page
+- complete simplified chinese version of dictionary
+- rip wiktionary/kaikki for dictionary
+- include pinyin in dictionary input, generate reverse lookup file
+- support more obscure variant and vietnamese characters (many had incorrect codes in the old zhengma file and were collectively struck until they can be checked carefully)
+- hokkien/hk-canto/vietnamese/japanese support?
+- version 1.0
+
+* code system
+** single character
+| original code | full code | short code | very short code |
+|---------------+-----------+------------+-----------------|
+| A             | A         | A          | A               |
+| Ab            | Ab        | Ab         | Ab              |
+| ACd           | ACd       | ACd        | AC              |
+| AbcD          | AbcD      | AbD        | AD              |
+| AC(d)Ef       | ACEf      | ACE        | AE              |
+| AbC(d)        | AbCd      | AbC        | AC              |
+| AbC(d)E(f)    | AbCE      | ACE        | AE              |
+| AbcD(e)Fg     | AbcF      | AbF        | AF              |
+| Ab(Cd)E(f)Gh  | AbEG      | AEG        | AG              |
+
+** full word
+
+| ​# of chars | long code                                             | shortcut |
+|          1 | A(B)CD                                                | AD, ACD  |
+|          2 | A(B)CD + E(F)GH = ACDEGH                              | AE       |
+|          3 | A(B)CD + E(F)GH + I(J)KL = ACDEGHIKL                  | AEI      |
+|         4+ | A(BC)D + E(FG)H + I(JK)L + M(NO)P + ... = ADEHILMP... |          |
+
+** codes by length
+
+| code length | result                             |
+|           1 | 1-char frequently-used word        |
+|           2 | 1-char/2-char frequently-used word |
+|           3 | 1-char/3-char frequently-used word |
+|           4 | single character                   |
+|           5 | 2-char word (2+2+v, 2+3, 3+2)      |
+|           6 | 2-char word (3+3)                  |
+|           8 | 4-char word (2+2+2+2)              |
+|           9 | 3-char word (3+3+3)                |
+|         10+ | 5+-char word (2×5+)                |

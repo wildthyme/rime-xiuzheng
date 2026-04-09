@@ -1,0 +1,8 @@
+* scripts
+- genComponentCodes.js consumes various sources and outputs componentCodes.tsv
+- genCharacterCodes.js consumes componentCodes.tsv and outputs characterCodes.tsv, which forms the contents of xiuzheng.dict.yaml
+* data sources
+- zhengma.tsv from https://github.com/acevery/rime-zhengma/ by Yuwei Yu; used for checking correctness of results
+- dict.tsv based on comparison with CC-CEDICT, hanyu da cidian, moedict; used for picking phrases to give codes
+- ids.tsv derives from https://github.com/hfhchan/ids ; used for building character codes from roots
+- other files with character/root codes are hand-written
