@@ -6,3 +6,4 @@
 - dict.tsv based on comparison with CC-CEDICT, hanyu da cidian, moedict; used for picking phrases to give codes
 - ids.tsv derives from https://github.com/hfhchan/ids ; used for building character codes from roots
 - other files with character/root codes are hand-written
+- BCC-global.csv derived from the [[https://faculty.blcu.edu.cn/xinghb/zh_CN/article/167473/content/1437.htm][BLCU BCC word frequency list]]; used for ranking dictionary words

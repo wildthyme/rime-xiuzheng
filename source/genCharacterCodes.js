@@ -1,22 +1,25 @@
+const target = process.argv[2] || 'trad'
 const fs = require('node:fs');
-const suzi = Object.fromEntries(fs.readFileSync('./suzi.tsv')
+yitiPath = target === 'simp' ? './yiti.simp.tsv' : './yiti.tsv'
+const yiti = Object.fromEntries(fs.readFileSync(yitiPath)
                                           .toString()
                                           .trim()
                                           .split('\n')
                                           .map(a => a.split('	')
                                                      .slice(0,2)))
 function vulgarize (word) {
-    return [...word].filter(char => char in suzi).length > 0
-                                         ? [ word, [...word].map(char => char in suzi
-                                                           ? suzi[char]
+    return [...word].filter(char => char in yiti).length > 0
+                                         ? [ word, [...word].map(char => char in yiti
+                                                           ? yiti[char]
                                                            : char).join('') ]
                                          : [ word ]
     
 }
+const freqListPath = target === 'simp' ? './BCC-global.csv' : './BCC-global.simp.csv'
 const wordCSVRanked = Object.fromEntries(
     Object.values(
         Object.groupBy(
-            fs.readFileSync('./BCC-global.csv')
+            fs.readFileSync(freqListPath)
               .toString()
               .trim()
               .split('\n')
@@ -45,8 +48,9 @@ const correctCodes = Object.fromEntries(fs.readFileSync('./componentCodes.tsv')
                                               testCodes: a[2].split(':').sort((c,d) => d.length - c.length),
                                           }])
 )
+const dictPath = target === 'simp' ? './dict.simp.tsv' : './dict.tsv'
 const wordCSV = Object.keys(correctCodes)
-                      .concat(fs.readFileSync('./dict.tsv')
+                      .concat(fs.readFileSync(dictPath)
                                 .toString()
                                 .trim()
                                 .split('\n')
@@ -160,6 +164,7 @@ const manyKeyShortcuts = Object.entries(wordTestSortedNew)
 
 const oneKeyShortcutsTrad = { a: "一", b: "都", c: "長", d: "把", e: "著", f: "要", g: "在", h: "到", j: "中", i: "上", k: "是", l: "用", m: "我", n: "的", o: "會", p: "所", q: "月", r: "亇", s: "就", t: "次", u: "為", v: "沒", w: "這", x: "又", y: "了", z: "將" }
 const oneKeyShortcutsSimp = { a: "一", b: "都", c: "长", d: "把", e: "其", f: "要", g: "在", h: "到", j: "中", i: "上", k: "是", l: "用", m: "我", n: "的", o: "个", p: "所", q: "月", r: "比", s: "就", t: "次", u: "为", v: "没", w: "這", x: "对", y: "了", z: "將" }
+const oneKeyShortcuts = target === 'simp' ? oneKeyShortcutsSimp : oneKeyShortcutsTrad
 
 const twoKeyShortcuts = Object.fromEntries(
     Object.entries(
@@ -210,7 +215,7 @@ const threeKeyShortcuts = Object.fromEntries(
         Object.groupBy(wordTests.filter(
             i => i[1].threeCode !== ''
                 && -1 === Object.values(twoKeyShortcuts).indexOf(i[0])
-                && -1 === Object.values(oneKeyShortcutsTrad).indexOf(i[0])
+                && -1 === Object.values(oneKeyShortcuts).indexOf(i[0])
                 && -1 === Object.keys(manualRoots).indexOf(i[0])
                 && -1 === Object.values(manualRoots).map(i => i.toLowerCase()).indexOf(i[1].threeCode.toLowerCase())
         ) , i => i[1].threeCode.toLowerCase())
@@ -242,8 +247,8 @@ const fourKeyShortcuts = [...new Set(Object.keys(threePlusVCodes).concat(Object.
           // ).filter(i => i[1].length > 0).sort((j, k) => k[0].localeCompare(j[0]))
 // console.dir(fourKeyShortcuts, { depth: 4, 'maxArrayLength': 10000 })
 let allCodes = [].concat(
-    Object.entries(oneKeyShortcutsTrad),
-    Object.entries(manualRoots).map(i => [i[1].toLowerCase(), i[0]]).filter(i => !(i[0].toLowerCase() in oneKeyShortcutsTrad)),
+    Object.entries(oneKeyShortcuts),
+    Object.entries(manualRoots).map(i => [i[1].toLowerCase(), i[0]]).filter(i => !(i[0].toLowerCase() in oneKeyShortcuts)),
     Object.entries(twoKeyShortcuts),
     Object.entries(threeKeyShortcuts),
     fourKeyShortcuts.flatMap(i => i[1].map(j => [i[0], j])),
@@ -253,4 +258,5 @@ let allCodes = [].concat(
     combinatoryShorts[i[1]] || ''
 ]).join('	')).join('\n')
 console.dir(allCodes, { depth: 4, 'maxArrayLength': 10000 })
-fs.writeFile('./characterCodes.tsv', allCodes, err => console.error(err))
+const writePath = target === 'simp' ? './characterCodes.simp.tsv' : './characterCodes.simp.tsv'
+fs.writeFile(writePath, allCodes, err => console.error(err))
