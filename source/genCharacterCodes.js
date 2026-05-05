@@ -65,6 +65,11 @@ const wordTests = wordList.filter(i => [...i].every(j => j in correctCodes))
                                   const fullCode = correctCodes[j].correctCodes[0].split('.')[0]
                                   const fourCode = correctCodes[j].correctCodes[0].split('.')[1]
                                   const roots = fullCode.split('.')[0].match(/([A-Z][a-z]*)/g)
+                                  const stem = roots.length > 2
+                                        ? roots[0][0] + roots[roots.length - 2][0] + roots[roots.length - 1].padEnd(2, 'v').slice(0, 2)
+                                        : roots.length === 2
+                                        ? (roots[0].slice(0, 2) + roots[1].padEnd(2, 'v')).slice(0,4)
+                                        : roots[0].padEnd(3, 'a')
                                   return {
                                       char: j,
                                       fourCode: fourCode,
@@ -72,15 +77,9 @@ const wordTests = wordList.filter(i => [...i].every(j => j in correctCodes))
                                       oldStyle2Code: roots.length === 1
                                           ? roots[0].padEnd(2, 'a')
                                           : roots[0][0] + roots[1][0],
-                                      newStyle3Code: roots.length === 1
-                                            ? roots[0].padEnd(3, 'a')
-                                          : roots.length === 2
-                                            ? (roots[0].slice(0,2) + roots[1]).slice(0,3).padEnd(3, 'a')
-                                            : roots[0][0] + roots[roots.length - 2][0] + roots[roots.length - 1][0],
-                                          // : roots[0][0] + roots[1][0] + roots[roots.length - 1][0],
-                                      newStyle2Code: roots.length === 1
-                                          ? roots[0].slice(0,2).padEnd(2, 'a')
-                                          : roots[0][0] + roots[roots.length - 1][0]
+                                      newStyle3Code: stem.slice(0, 3), // AaAbAc
+                                      stem: stem,
+                                      newStyle2Code: stem[0] + stem[stem.length - 2] //AaAy
                                   }
                               })
                               return [ i, [...i].length === 1
@@ -92,7 +91,8 @@ const wordTests = wordList.filter(i => [...i].every(j => j in correctCodes))
                                                ? chars[0].fourCode + 'v'
                                                : chars[0].fourCode,
                                            twoCode: chars[0].newStyle2Code,
-                                           threeCode: chars[0].newStyle3Code
+                                           threeCode: chars[0].newStyle3Code,
+                                           stem: chars[0].stem,
                                        }
                                        : [...i].length === 2
                                        ? {
@@ -119,7 +119,8 @@ const wordTests = wordList.filter(i => [...i].every(j => j in correctCodes))
                                            twoCode: chars[0].char === chars[1].char
                                                ? chars[0].newStyle2Code[0] + 'v'
                                                : chars[0].newStyle2Code[0] + chars[1].newStyle2Code[0],
-                                           threeCode: ''
+                                           threeCode: '',
+                                           stem: ''
                                        }
                                        : [...i].length === 3 // longstyle
                                        ? {
@@ -132,6 +133,7 @@ const wordTests = wordList.filter(i => [...i].every(j => j in correctCodes))
                                            threeCode: chars[1].char === chars[2].char
                                                ? chars[0].newStyle3Code[0] + chars[0].newStyle3Code[1] + 'v'
                                                : chars[0].newStyle3Code[0] + chars[1].newStyle3Code[0]+ chars[2].newStyle3Code[0],
+                                           stem: ''
                                        }
                                        : {
                                            rank: wordCSVRanked[i],
@@ -141,12 +143,15 @@ const wordTests = wordList.filter(i => [...i].every(j => j in correctCodes))
                                            // newStyle: chars.map(i => i.newStyle2Code).join(''),
                                            // newStyle: chars[0].newStyle2Code + chars[1].newStyle2Code + chars[2].newStyle2Code + chars.slice(3, chars.length).map(i => i.roots[i.roots.length - 1][0]).join(''),
                                            twoCode: '',
-                                           threeCode: ''
+                                           threeCode: '',
+                                           stem: ''
                                        }
                                      ]
 })
 const wordTestSortedOld = Object.groupBy(wordTests, i => i[1].oldStyle.toLowerCase())
 const wordTestSortedNew = Object.groupBy(wordTests, i => i[1].newStyle.toLowerCase())
+// const stems = Object.groupBy(wordTests, i => i[1].stem.toLowerCase())
+// console.dir(Object.entries(stems),{ depth: 4, 'maxArrayLength': 1000 })
 console.log(`words you would make an error on if typed without looking in old system: ${wordTests.length - Object.keys(wordTestSortedOld).length} out of ${wordTests.length} or ${(100 - (Object.keys(wordTestSortedOld).length / wordTests.length) * 100).toFixed(2)}`)
 console.log(`words you would make an error on if typed without looking in new system: ${wordTests.length - Object.keys(wordTestSortedNew).length} out of ${wordTests.length} or ${(100 - (Object.keys(wordTestSortedNew).length / wordTests.length) * 100).toFixed(2)}`)
 console.log(`errors saved: ${(wordTests.length - Object.keys(wordTestSortedOld).length) - (wordTests.length - Object.keys(wordTestSortedNew).length)}`)
@@ -206,10 +211,11 @@ const longcuts = Object.fromEntries(Object.entries(
 const combinatoryShorts = Object.fromEntries(
     Object.entries(
         Object.groupBy(wordTests.filter(
-            i => i[1].threeCode !== '' && [...i[0]].length === 1
-        ) , i => i[1].threeCode.toLowerCase())
+            i => i[1].stem !== '' && [...i[0]].length === 1
+        ) , i => i[1].stem.toLowerCase())
     ).flatMap( i => i[1].map(j => [ j[0], i[0] ]))
 )
+console.log(combinatoryShorts)
 const threeKeyShortcuts = Object.fromEntries(
     Object.entries(
         Object.groupBy(wordTests.filter(
@@ -258,5 +264,5 @@ let allCodes = [].concat(
     combinatoryShorts[i[1]] || ''
 ]).join('	')).join('\n')
 console.dir(allCodes, { depth: 4, 'maxArrayLength': 10000 })
-const writePath = target === 'simp' ? './characterCodes.simp.tsv' : './characterCodes.simp.tsv'
+const writePath = target === 'simp' ? './characterCodes.simp.tsv' : './characterCodes.tsv'
 fs.writeFile(writePath, allCodes, err => console.error(err))

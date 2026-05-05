@@ -114,5 +114,10 @@ note also
 - include pinyin in dictionary input, generate reverse lookup file
 - support more obscure variant and vietnamese characters (many had incorrect codes in the old zhengma file and were collectively struck until they can be checked carefully)
 - hokkien/hk-canto/vietnamese/japanese support?
-- version 1.0
-
+* changelog
+** 0.3
+fixed phrase encoder
+** 0.2
+added simplified chinese
+** 0.1
+initial release
