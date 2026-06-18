@@ -190,28 +190,6 @@ however, 4-char words are rarer and so can afford shorter codes without becoming
 | e | エ | Bi  | ケ | MaM | セ | YzA | テ | BdM | ネ | Ws | ヘ | Yda | メ | Xo  |    |    | レ | Z  | ヱ | YIA |
 | o | オ | DM  | コ | X   | ソ | Td  | ト | Id  | ノ | Y  | ホ | F   | モ | AHd | ヨ | Xb | ロ | J  | ヲ | YA  |
 | n | ン | SA  |    |     |    |     |    |     |    |    |    |     |    |     |    |    |    |    |    |     |
-** katakana phonetic planning :noexport:
-|   | - | y/i- | w/u- |
-| a | a | b    | c    |
-| i | i | j    | k    |
-| u | u | v    | w    |
-| e | e | f    | g    |
-| o | o | p    | q   |
-
-|   | a  | ya         | wa             | i        | yi       | wi          | u             | yu         | wu         | e  | ye         | we          | o  | yo         | wo          |
-| x | a  | ya         | (ua/wa) wa     | i        | ii/yi    | wi          | u             | yu         | (uu/wu) wu | e  | (ie/ye) ye | we          | o  | yo         | wo          |
-| k | ka | (kiya) kya | (kuwa/kua) kwa | ki       |          | (kui) kwi   | ku            | (kiyu) kyu |            | ke | (kie) kye  | (kue) kwe   | ko | (kiyo) kyo | (kuo) kwo   |
-| g | ga | (giya) gya | (guwa/gua) gwa | gi       |          | (gui) gwi   |               | (giyu) gyu |            | ge | (gie) gye  | (gue) gwe   | go | (giyo) gyo | (guo) gwo   |
-| s | sa | (siya) sha |                | (sui) si | (si) shi |             | su            | (siyu) shu |            | se | (sie) she  |             | so | (siyo) sho |             |
-| z | za | (ziya) ja  |                | (zui) zi | (zi) ji  |             | zu            | (ziyu) ju  |            | ze | (zie) je   |             | zo | (ziyo) jo  |             |
-| t | ta | (tiya) cha | (tua) tsa      | (tei) ti | (ti) chi | (tui) tsi   | (tou/teyu) tu | (tiyu) chu | (tu) tsu   | te | (tie) che  | (tue) tse   | to | (tiyo) cho | (tuo) tso   |
-| d | da | (diya) ja  |                | (dei) di | (di) ji  |             | (dou/deyu) du | (diyu) ju  | (du) zu    | de | (die) je   |             | do | (diyo) jo  |             |
-| n | na | (niya) nya |                | ni       |          |             | nu            | (niyu) nyu |            | ne | (nie) nye  |             | no | (niyo) nyo |             |
-| h | ha | (hiya) hya | (hua) fa       | hi       |          | (hui) fi    | (hou) hu      | (hiyu) hyu | (hu) fu    | he | (hie) hye  | (hue) fe    | ho | (hiyo) hyo | (huo) fo    |
-| b | ba | (biya) bya | (va/vua) va    | bi       |          | (vi/vui) vi | bu            | (biyu) byu | vu         | be | (bie) bye  | (ve/vue) ve | bo | (biyo) byo | (vo/vuo) vo |
-| p | pa | (piya) pya | (vuya) vya     | pi       |          |             | pu            | (piyu) pyu | (vuyu) vyu | pe | (pie) pye  | (vuye) vye  | po | (piyo) pyo | (vuyo) vyo  |
-| m | ma | (miya) mya |                | mi       |          |             | mu            | (miyu) myu |            | me | (mie) mye  |             | mo | (miyo) myo |             |
-| r | ra | (riya) rya |                | ri       |          |             | ru            | (riyu) ryu |            | re | (rie) rye  |             | ro | (riyo) ryo |             |
 * zhengma learning resources
 - [[https://pinchoboo.github.io/ZhengmaPractice][Zhengma practice tool]]
 - [[https://upload.wikimedia.org/wikipedia/commons/6/69/ZhengMa_Chart.png][Zhengma roots chart by Trotimus on Wikimedia Commons]]
@@ -234,7 +212,7 @@ however, 4-char words are rarer and so can afford shorter codes without becoming
 - fix: words with 用 were not receiving codes
 - fix: 同 appeared as =ldaj= alone but =ld= in words (now =laj= in words)
 - handle terms with latin letters in them: AA 制 = =A+A+MbLiKd= = =aamlk=; CP 值 = =C+P+NEdLo= = =cpnel=
-- codes for roots are demoted to make room for more useful shortcuts (e.g. 有 == =gq= so the root for 豕 has to be assigned =gqa= instead)
+- codes for roots are demoted to make room for more useful shortcuts (e.g. 有 = =gq= so the root for 豕 has to be assigned =gqa= instead)
 - some very WIP code for japanese mode
 ** 0.3
 fixed phrase encoder
