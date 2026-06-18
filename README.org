@@ -106,9 +106,16 @@ however, 4-char words are rarer and so can afford shorter codes without becoming
 ** 1-key shortcuts (traditional version)
 | A 一 | B 都 | C 長 | D 把 | E 著 |
 | F 要 | G 在 | H 到 | I 上 | J 中 |
-| K 是 | L 用 | M 我 | N 的 | L 用 |
-| O 會 | P 所 | Q 月 | R 亇 | S 就 |
-| T 次 | U 為 | W 這 | X 又 | Y 了 |
+| K 是 | L 用 | M 我 | N 的 | O 會 |
+| P 所 | Q 月 | R 亇 | S 就 | T 次 |
+| U 為 | V 沒 | W 這 | X 又 | Y 了 |
+| Z 將 |      |      |      |      |
+** 1-key shortcuts (simplified version)
+| A 一 | B 都 | C 长 | D 把 | E 其 |
+| F 要 | G 在 | H 到 | I 上 | J 中 |
+| K 是 | L 用 | M 我 | N 的 | O 个 |
+| P 所 | Q 月 | R 比 | S 就 | T 次 |
+| U 为 | V 没 | W 這 | X 对 | Y 了 |
 | Z 將 |      |      |      |      |
 ** zhùyīn
 | symbols | decomposition | latin hint |
