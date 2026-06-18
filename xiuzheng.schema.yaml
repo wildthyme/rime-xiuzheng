@@ -4,7 +4,7 @@
 schema:
   schema_id: xiuzheng
   name: "修鄭"
-  version: "0.3"
+  version: "0.4"
   author:
     - 發明人 鄭易里教授
     - 修鄭版本為艾紅蓮所造
@@ -12,7 +12,7 @@ schema:
     修鄭繁體國語版
     敲 ` 鍵進入拼音反查
   dependencies:
-    - terra_pinyin
+    - xiuzheng_reverse
 
 switches:
   - name: ascii_mode
@@ -54,7 +54,7 @@ translator:
   max_phrase_length: 6
 
 reverse_lookup:
-  dictionary: terra_pinyin
+  dictionary: xiuzheng_reverse
   prefix: "`"
   tips: 〔拼音〕
   preedit_format:

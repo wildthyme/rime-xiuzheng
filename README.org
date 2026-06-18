@@ -19,9 +19,8 @@ xiuzheng's design goals are as follows:
   - xiuzheng should be *familiar and easy to adjust to for existing users of zhengma*, because it retains the same 4-key character codes and makes shortcuts /more/ predictable.
 - xiuzheng should support multiple regions and languages.
   - like zhengma and cangjie, the low ambiguity of xiuzheng is suited to typing classical chinese.
-  - unlike zhengma, xiuzheng provides a word-dictionary based on traditional characters, so that you don't have to choose from a suggestion list to avoid typing the simplified version of a word.
+  - unlike zhengma, *xiuzheng provides separate word-dictionaries for traditional and simplified characters*, so that you don't have to choose from a suggestion list to avoid typing the simplified version of a word.
   - in the hope of enabling some of the same stylistic freedom available in handwriting, some common variant characters are supported: 臺／台、對／対、個／亇、第／㐧、聽／咡、點／奌，etc.
-  - i intend next to release a separate word-dictionary based on simplified characters.
   - in future, i would like to produce dictionaries for east asian languages besides mandarin, but i am not as familiar with those and will need to go about it carefully.
 
 this is a new project, and i am very open to comments or suggestions for refining the system.
@@ -33,7 +32,7 @@ by my calculations, if you were to type the dictionary with your eyes closed usi
 by using longer codes for longer words, xiuzheng reduces this error rate to ~6%.
 to compensate for the use of longer codes, many common words are also assigned shortcuts: =unt= 為什麼、 =ae= 一直、 =jc= 嗎，etc.
 
-here CamelCase is used to indicate different roots.
+here, CamelCase is used to indicate different roots.
 thus the root 女 is written =Zm=, the root 生 is written =Mc=, and the sequence of roots for 姓 is =ZmMc=.
 in practice, everything is typed in lowercase.
 
@@ -64,57 +63,179 @@ another benefit to this change is that the combination of first and last codes d
 | ACd           | ACd       | ACd        | AC              |
 | AbcD          | AbcD      | AbD        | AD              |
 | AC(d)Ef       | ACEf      | ACE        | AE              |
-| AbC(d)        | AbCd      | AbC        | AC              |
+| AbCd          | AbCd      | AbC        | AC              |
 | AbC(d)E(f)    | AbCE      | ACE        | AE              |
 | AbcD(e)Fg     | AbcF      | AbF        | AF              |
 | Ab(Cd)E(f)Gh  | AbEG      | AEG        | AG              |
 
 ** full word
-note how 2-char codes are usually 3+3, but may also be 2+3 or 2+4, if the code for the first character happens to be particularly short.
-reduplicated words such as 哈哈 also get special treatment.
-instead of J(O)AJ + J(O)AJ = JAJJAJ, the code is JOAJ + V = JOAJV.
-simply type the full code for the original character and add V's until it is 5 keys long.
+2-char codes may take the forms 2+2+v=5, 2+3=5, 3+2=5, or 3+3=6, meaning the codes are 5–6 characters long. 3-char codes likewise range from 2+2+2=6 to 3+3+3=9 characters long. longer words use only the two keys per character: the first letter of the first root and the first letter of the last root. thus 4 chars × 2 roots = 8 keys, 5 chars × 2 roots = 10 keys, etc.
 
 | ​# of chars | long code                                             | shortcut  |
 |          1 | A(B)CD                                                | AD or ACD |
-|          2 | A(B)CD + E(F)GH = ACDEGH                              | AE        |
-|          2 | AB + CDEF = ABCDEF                              | AE        |
-|          2 | ABCD + ABCD = ABCDV (same char. twice)                | AV        |
-|          3 | A(B)CD + E(F)GH + I(J)KL = ACDEGHIKL                  | AEI       |
+|          2 | AB + CD = ABCDV                                       | AC(V)     |
+|          2 | AB(C) + DE(F) = AB(C)DE(F)                            | AD(V)     |
+|          3 | AB(C) + DE(F) + GH(I) = AB(C)DE(F)GH(I)               | ADG       |
 |         4+ | A(BC)D + E(FG)H + I(JK)L + M(NO)P + ... = ADEHILMP... |           |
 
 ** codes by length
-it may seem odd that 3-char words take 9 keys, while 4-char words only take 8.
+it may seem odd that 3-char words take up to 9 keys, while 4-char words only take 8.
 however, 4-char words are rarer and so can afford shorter codes without becoming ambiguous.
 3 chars × 3 keys and 4 chars × 2 keys makes for more intuitive arithmetic than any other option i have experimented with.
 
-note also
+| code length | result                   | example                                |
+|           1 | 1-char word shortcut     | =l= 用 (=LdBi=)                            |
+|           2 | 1-char full code         | =ko= 小 (=Ko=)                             |
+|           2 | 1-char word shortcut     | =pe= 針 (=PEd=)                            |
+|           2 | 2-char word shortcut     | =pz= 所以 (=pxp+zso=)                      |
+|           3 | 2-char word shortcut + v | =gjv= 歷史 (=gmi+jos+v=)                   |
+|           3 | 1-char full code         | =fka= 查                                 |
+|           3 | 1-char word shortcut     | =wdz= 安 (=WdZm=)                          |
+|           3 | 3-char word shortcut     | =efi= 基本上 (=ecb+fa+ida=)                |
+|           4 | 1-char full code         | =zmmc= 姓 (=ZmMc=)                         |
+|           5 | 2-char word (2+2+v)      | =zmmcv= 女生 (=zm+mc+v=)                   |
+|           5 | 2-char word (2+3)        | =kokbd= 小時 (=ko+kbd=)                    |
+|           6 | 2-char word (3+3)        | =pxpzso= 所以 (=pxp+zso=)                  |
+|           6 | 3-char word (2+2+2)      | =giaawd= 不一定 (=gi+aa+wd=)               |
+|           7 | 3-char word (2*2+3)      | =greckai= 尤其是 (=gr+ec+kai=)             |
+|           8 | 3-char word (2+2*3)      | =gdkomocy= 大少爺 (=gd+kom+ocy=)           |
+|           8 | 4-char word (2+2+2+2)    | =agchbyrs= 天長地久 (=ag+ch+by+rs=)        |
+|           9 | 3-char word (3+3+3)      | =uyunedtzz= 為什麼 (=uyu+ned+tzz=)         |
+|         10+ | 5+-char word (2×5+)      | =klnbcbdxja= 常任理事國 (=kl+nb+cb+dx+ja=) |
+* reference codes
+** 1-key shortcuts (traditional version)
+| A 一 | B 都 | C 長 | D 把 | E 著 |
+| F 要 | G 在 | H 到 | I 上 | J 中 |
+| K 是 | L 用 | M 我 | N 的 | L 用 |
+| O 會 | P 所 | Q 月 | R 亇 | S 就 |
+| T 次 | U 為 | W 這 | X 又 | Y 了 |
+| Z 將 |      |      |      |      |
+** zhùyīn
+| symbols | decomposition | latin hint |
+| ㄅ      | Ry            | b          |
+| ㄆ      | Rs            | p          |
+| ㄇ      | Ld            | m          |
+| ㄈ      | H             | f          |
+| ㄪ      | AYm           | v          |
+| ㄉ      | MYd           | d          |
+| ㄊ      | Hd            | t          |
+| ㄋ      | Y             | n          |
+| ㄌ      | MYm           | l          |
+| ㄍ      | Zd            | g          |
+| ㄎ      | AZ            | k          |
+| ㄫ      | Gr            | ng         |
+| ㄏ      | Gg            | h          |
+| ㄐ      | Zi            | j          |
+| ㄑ      | Z             | q          |
+| ㄬ      | T             | gn         |
+| ㄒ      | AI            | x          |
+| ㄓ      | ZiA           | zh         |
+| ㄔ      | Oi            | ch         |
+| ㄕ      | Xm            | sh         |
+| ㄖ      | JdS           | r          |
+| ㄗ      | Y             | z          |
+| ㄘ      | AZX           | c          |
+| ㄙ      | Zs            | s          |
+| ㄚ      | UdI           | a          |
+| ㄛ      | AIH           | o          |
+| ㄜ      | EdH           | e          |
+| ㄝ      | EdZ           | ie         |
+| ㄞ      | AZM           | ai         |
+| ㄟ      | Yda           | ei         |
+| ㄠ      | ZZs           | ao         |
+| ㄡ      | Xs            | ou         |
+| ㄢ      | XZX           | an         |
+| ㄣ      | ZX            | en         |
+| ㄤ      | Gr            | ang        |
+| ㄥ      | Z             | eng        |
+| ㄦ      | Nd            | er         |
+| ㄧ      | A             | yi         |
+| ㄨ      | Os            | wu         |
+| ㄩ      | Zi            | yu         |
+| ㄭ      | ALi           | (z)i       |
+| ㆠ      | RyJ           | bb         |
+| ㆣ      | ZdJ           | gg         |
+| ㆢ      | ZiJ           | jj         |
+| ㆡ      | YJ            | zz         |
+| ㆨ      | OsA           | ir         |
+| ㆦ      | AIZm          | oo         |
+| ㆤ      | YZA           | e          |
+| ㆩ      | UdIJ          | na         |
+| ㆧ      | AIZmJ         | no         |
+| ㆥ      | YZAJ          | ne         |
+| ㆪ      | AJ            | ni         |
+| ㆳ      | IJ            | ni         |
+| ㆫ      | OsJ           | nu         |
+| ㆮ      | AZMJ          | nai        |
+| ㆯ      | ZZJ           | nau        |
+| ㆰ      | UdLdI         | am         |
+| ㆱ      | ALdIH         | om         |
+| ㆲ      | Bi            | ong        |
+| ㆬ      | LdI           | m          |
+| ㆭ      | GrI           | ng         |
+| ㆴ      | Ry            | -p         |
+| ㆵ      | MYd           | -t         |
+| ㆻ      | Zd            | -k         |
+| ㆶ      | AZ            | -k*        |
+| ㆷ      | Gg            | -h         |
+| ㆼ      | Zm            | gw         |
+| ㆽ      | AZm           | kw         |
+| ㆾ      | ZA            | eo         |
+| ㆿ      | O             | a          |
+** katakana
+|   | Ø  |     | k  |     | s  |     | t  |     | n  |    | h  |     | m  |     | y  |    | r  |    | w  |     |
+| a | ア | YM  | カ | Ym  | サ | EdM | タ | Rs  | ナ | Gd | ハ | O   | マ | YS  | ヤ | YI | ラ | AY | ワ | IY  |
+| i | イ | N   | キ | Bi  | シ | TdA | チ | MGd | ニ | Bd | ヒ | Rr  | ミ | V   |    |    | リ | Kd | ヰ | Mb  |
+| u | ウ | IIY | ク | R   | ス | RsA | ツ | TdM | ヌ | Xs | フ | Y   | ム | Zs  | ユ | X  | ル | Rd |    |     |
+| e | エ | Bi  | ケ | MaM | セ | YzA | テ | BdM | ネ | Ws | ヘ | Yda | メ | Xo  |    |    | レ | Z  | ヱ | YIA |
+| o | オ | DM  | コ | X   | ソ | Td  | ト | Id  | ノ | Y  | ホ | F   | モ | AHd | ヨ | Xb | ロ | J  | ヲ | YA  |
+| n | ン | SA  |    |     |    |     |    |     |    |    |    |     |    |     |    |    |    |    |    |     |
+** katakana phonetic planning :noexport:
+|   | - | y/i- | w/u- |
+| a | a | b    | c    |
+| i | i | j    | k    |
+| u | u | v    | w    |
+| e | e | f    | g    |
+| o | o | p    | q   |
 
-| code length | result                                |
-|           1 | 1-char frequently-used word           |
-|           2 | 1-char or 2-char frequently-used word |
-|           3 | 1-char or 3-char frequently-used word |
-|           4 | single character                      |
-|           5 | 2-char word (2+2+v, 2+3, 3+2)         |
-|           6 | 2-char word (2+4, 3+3)                |
-|           8 | 4-char word (2+2+2+2)                 |
-|           9 | 3-char word (3+3+3)                   |
-|         10+ | 5+-char word (2×5+)                   |
+|   | a  | ya         | wa             | i        | yi       | wi          | u             | yu         | wu         | e  | ye         | we          | o  | yo         | wo          |
+| x | a  | ya         | (ua/wa) wa     | i        | ii/yi    | wi          | u             | yu         | (uu/wu) wu | e  | (ie/ye) ye | we          | o  | yo         | wo          |
+| k | ka | (kiya) kya | (kuwa/kua) kwa | ki       |          | (kui) kwi   | ku            | (kiyu) kyu |            | ke | (kie) kye  | (kue) kwe   | ko | (kiyo) kyo | (kuo) kwo   |
+| g | ga | (giya) gya | (guwa/gua) gwa | gi       |          | (gui) gwi   |               | (giyu) gyu |            | ge | (gie) gye  | (gue) gwe   | go | (giyo) gyo | (guo) gwo   |
+| s | sa | (siya) sha |                | (sui) si | (si) shi |             | su            | (siyu) shu |            | se | (sie) she  |             | so | (siyo) sho |             |
+| z | za | (ziya) ja  |                | (zui) zi | (zi) ji  |             | zu            | (ziyu) ju  |            | ze | (zie) je   |             | zo | (ziyo) jo  |             |
+| t | ta | (tiya) cha | (tua) tsa      | (tei) ti | (ti) chi | (tui) tsi   | (tou/teyu) tu | (tiyu) chu | (tu) tsu   | te | (tie) che  | (tue) tse   | to | (tiyo) cho | (tuo) tso   |
+| d | da | (diya) ja  |                | (dei) di | (di) ji  |             | (dou/deyu) du | (diyu) ju  | (du) zu    | de | (die) je   |             | do | (diyo) jo  |             |
+| n | na | (niya) nya |                | ni       |          |             | nu            | (niyu) nyu |            | ne | (nie) nye  |             | no | (niyo) nyo |             |
+| h | ha | (hiya) hya | (hua) fa       | hi       |          | (hui) fi    | (hou) hu      | (hiyu) hyu | (hu) fu    | he | (hie) hye  | (hue) fe    | ho | (hiyo) hyo | (huo) fo    |
+| b | ba | (biya) bya | (va/vua) va    | bi       |          | (vi/vui) vi | bu            | (biyu) byu | vu         | be | (bie) bye  | (ve/vue) ve | bo | (biyo) byo | (vo/vuo) vo |
+| p | pa | (piya) pya | (vuya) vya     | pi       |          |             | pu            | (piyu) pyu | (vuyu) vyu | pe | (pie) pye  | (vuye) vye  | po | (piyo) pyo | (vuyo) vyo  |
+| m | ma | (miya) mya |                | mi       |          |             | mu            | (miyu) myu |            | me | (mie) mye  |             | mo | (miyo) myo |             |
+| r | ra | (riya) rya |                | ri       |          |             | ru            | (riyu) ryu |            | re | (rie) rye  |             | ro | (riyo) ryo |             |
 * zhengma learning resources
 - [[https://pinchoboo.github.io/ZhengmaPractice][Zhengma practice tool]]
 - [[https://upload.wikimedia.org/wikipedia/commons/6/69/ZhengMa_Chart.png][Zhengma roots chart by Trotimus on Wikimedia Commons]]
 - [[https://codmal.narod.ru/ZhengMa.htm][Megatron Cookie, "ZHENGMA (郑码): A Brief Introduction for English Speakers"]] (en)
 - [[https://en.wikibooks.org/wiki/Zhengma_Input][Zhengma Input on Wikibooks]] (en)
 * todo
+- use new word priority list
 - detailed installation instructions
+- support region-specific decompositions (e.g. 儿 =Rd= vs 八 =O= in 空 =WdRdBi= / =WdOBi=)
 - mandarin (tc/sc) versions of this page
-- double check reduplicated word codes (熱騰騰 etc)
-- complete simplified chinese version of dictionary
 - rip wiktionary/kaikki for dictionary
-- include pinyin in dictionary input, generate reverse lookup file
 - support more obscure variant and vietnamese characters (many had incorrect codes in the old zhengma file and were collectively struck until they can be checked carefully)
 - hokkien/hk-canto/vietnamese/japanese support?
 * changelog
+** 0.4
+- codes for 3-char words vary at 6–9 keys instead of strictly 9.
+  this proves significantly more intuitive.
+- added 2 key + v shortcuts for more 2-char words
+- added full reverse lookup dictionaries
+- fix: words with 用 were not receiving codes
+- fix: 同 appeared as =ldaj= alone but =ld= in words (now =laj= in words)
+- handle terms with latin letters in them: AA 制 = =A+A+MbLiKd= = =aamlk=; CP 值 = =C+P+NEdLo= = =cpnel=
+- codes for roots are demoted to make room for more useful shortcuts (e.g. 有 == =gq= so the root for 豕 has to be assigned =gqa= instead)
+- some very WIP code for japanese mode
 ** 0.3
 fixed phrase encoder
 ** 0.2

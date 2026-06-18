@@ -54,7 +54,7 @@
 ㆳ	IJ	ni
 ㆫ	OsJ	nu
 ㆮ	AZMJ	nai
-ㆯ	ZZsJ	nau
+ㆯ	ZZJ	nau
 ㆰ	UdLdI	am
 ㆱ	ALdIH	om
 ㆲ	Bi	ong
@@ -69,12 +69,13 @@
 ㆽ	AZm	kw
 ㆾ	ZA	eo
 ㆿ	O	a
-ˊ		2
-ˇ		3
-ˋ		4
-˙		5
-˪		h4
-˫		7
+ˊ	/	2/5
+ˇ	,	3/
+ˋ	\	4/2
+˙	.	5/
+˪	,	/3
+˫	-	/7
+̇ 	.	/8
 		//katakana
 ア	YM
 イ	N
@@ -101,13 +102,13 @@
 ヌ	Xs
 ネ	Ws
 ノ	Y
-ハ	Oa
+ハ	O
 ヒ	Rr
 フ	Y
 ヘ	Yda
 ホ	F
 マ	YS
-ミ	SSS
+ミ	V
 ム	Zs
 メ	Xo
 モ	AHd

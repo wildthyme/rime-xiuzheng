@@ -4,7 +4,7 @@
 schema:
   schema_id: xiuzheng_cmn_Hans
   name: "简体修郑"
-  version: "0.3"
+  version: "0.4"
   author:
     - 發明人 鄭易里教授
     - 修鄭版本為艾紅蓮所造
@@ -12,7 +12,7 @@ schema:
     修郑简体普通话版
     敲 ` 键进入拼音反查
   dependencies:
-    - pinyin_simp
+    - xiuzheng_reverse_cmn_Hans
 
 switches:
   - name: ascii_mode
@@ -54,7 +54,7 @@ translator:
   max_phrase_length: 6
 
 reverse_lookup:
-  dictionary: pinyin_simp
+  dictionary: xiuzheng_reverse_cmn_Hans
   prefix: "`"
   tips: 〔拼音〕
   preedit_format:
